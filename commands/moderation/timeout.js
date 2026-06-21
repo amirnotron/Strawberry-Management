@@ -10,11 +10,13 @@ module.exports = {
         .addStringOption(option => option.setName('reason').setDescription('دلیل تایم‌اوت').setRequired(false)),
 
     async execute(interaction) {
+        await interaction.deferReply();
+
         const target = interaction.options.getMember('target');
         const minutes = interaction.options.getInteger('minutes');
         const reason = interaction.options.getString('reason') || 'دلیلی ذکر نشده است';
 
-        if (!target) return interaction.reply({ content: 'کاربر مورد نظر پیدا نشد.', ephemeral: true });
+        if (!target) return interaction.editReply({ content: 'کاربر مورد نظر پیدا نشد.' });
 
         // تبدیل دقیقه به میلی‌ثانیه برای دیسکورد
         await target.timeout(minutes * 60 * 1000, reason);
@@ -30,6 +32,6 @@ module.exports = {
             )
             .setTimestamp();
 
-        await interaction.reply({ embeds: [embed] });
+        await interaction.editReply({ embeds: [embed] });
     },
 };

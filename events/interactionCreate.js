@@ -74,7 +74,11 @@ module.exports = {
                         .setStyle(ButtonStyle.Danger),
                 );
 
-            await ticketChannel.send({ content: `<@&${adminRoleId}>\n${interaction.user}`, embeds: [embed], components: [row] });
+            await ticketChannel.send({
+                content: `<@&${adminRoleId}>\n${interaction.user}`,
+                embeds: [embed],
+                components: [row],
+            });
             await interaction.editReply({ content: `✅ تیکت شما ساخته شد: ${ticketChannel}` });
         }
 
