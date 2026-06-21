@@ -32,11 +32,13 @@ module.exports = {
         const config = configManager.read();
 
         if (interaction.customId === 'open_ticket') {
+            await interaction.deferReply({ ephemeral: true });
+
             const categoryId = config.ticketCategoryId;
             const adminRoleId = config.ticketAdminRoleId;
 
             if (!categoryId || !adminRoleId) {
-                return interaction.reply({ content: 'سیستم تیکت هنوز ستاپ نشده است!', ephemeral: true });
+                return interaction.editReply({ content: 'سیستم تیکت هنوز ستاپ نشده است!' });
             }
 
             const ticketChannel = await interaction.guild.channels.create({
@@ -73,7 +75,7 @@ module.exports = {
                 );
 
             await ticketChannel.send({ embeds: [embed], components: [row] });
-            await interaction.reply({ content: `تیکت شما باز شد: ${ticketChannel}`, ephemeral: true });
+            await interaction.editReply({ content: `✅ تیکت شما ساخته شد: ${ticketChannel}` });
         }
 
         if (interaction.customId === 'close_ticket') {
