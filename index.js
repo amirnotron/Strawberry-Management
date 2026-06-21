@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits, ActivityType } = require('discord.js');
 const { token } = require('./config.json');
+const YouTubeNotifier = require('./utils/youtubeNotifier');
 
 const client = new Client({
     intents: [
@@ -68,6 +69,10 @@ client.once(Events.ClientReady, (readyClient) => {
 
     updatePresence();
     setInterval(updatePresence, 600000);
+
+    const youtubeNotifier = new YouTubeNotifier(client);
+    youtubeNotifier.checkNewVideo();
+    youtubeNotifier.start();
 });
 
 client.login(token);
