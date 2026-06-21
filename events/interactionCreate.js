@@ -4,11 +4,33 @@ const configManager = require('../utils/configManager');
 module.exports = {
     name: Events.InteractionCreate,
     async execute(interaction) {
+
+        if (interaction.isChatInputCommand()) {
+            const command = interaction.client.commands.get(interaction.commandName);
+
+            if (!command) {
+                console.error(`No command matching ${interaction.commandName} was found.`);
+                return;
+            }
+
+            try {
+                await command.execute(interaction);
+            } catch (error) {
+                console.error(error);
+                const errorMessage = { content: 'هنگام اجرای این کامند خطایی رخ داد!', ephemeral: true };
+                if (interaction.replied || interaction.deferred) {
+                    await interaction.followUp(errorMessage);
+                } else {
+                    await interaction.reply(errorMessage);
+                }
+            }
+            return;
+        }
+
         if (!interaction.isButton()) return;
 
         const config = configManager.read();
 
-        // باز کردن تیکت
         if (interaction.customId === 'open_ticket') {
             const categoryId = config.ticketCategoryId;
             const adminRoleId = config.ticketAdminRoleId;
@@ -54,7 +76,6 @@ module.exports = {
             await interaction.reply({ content: `تیکت شما باز شد: ${ticketChannel}`, ephemeral: true });
         }
 
-        // بستن تیکت
         if (interaction.customId === 'close_ticket') {
             await interaction.reply('این تیکت تا 5 ثانیه دیگر بسته می‌شود...');
             setTimeout(() => {

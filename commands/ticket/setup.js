@@ -25,7 +25,9 @@ module.exports = {
                 .setRequired(true)),
 
     async execute(interaction) {
-        // گرفتن مقادیر وارد شده توسط تو
+        // اضافه کردن این خط برای جلوگیری از ارور تایم‌اوت
+        await interaction.deferReply({ ephemeral: true });
+
         const category = interaction.options.getChannel('category');
         const panelChannel = interaction.options.getChannel('panel_channel');
         const adminRole = interaction.options.getRole('admin_role');
@@ -36,7 +38,6 @@ module.exports = {
             ticketAdminRoleId: adminRole.id
         });
 
-        // ساخت امبد برای پنل
         const embed = new EmbedBuilder()
             .setTitle('پشتیبانی سرور Strawberry')
             .setDescription('برای ارتباط با تیم مدیریت و باز کردن تیکت، روی دکمه زیر کلیک کنید.')
@@ -50,13 +51,11 @@ module.exports = {
                     .setStyle(ButtonStyle.Primary),
             );
 
-        // ارسال پنل به کانالی که مشخص کردی (نه کانالی که توش کامند رو زدی)
         await panelChannel.send({ embeds: [embed], components: [row] });
 
-        // پیام تاییدیه فقط برای خودت
-        await interaction.reply({
-            content: `✅ سیستم تیکت با موفقیت ستاپ شد!\nپنل در کانال ${panelChannel} ارسال شد و تیکت‌های جدید در کتگوری **${category.name}** ساخته خواهند شد.`,
-            ephemeral: true
+        // تغییر از reply به editReply چون از defer استفاده کردیم
+        await interaction.editReply({
+            content: `✅ سیستم تیکت با موفقیت ستاپ شد!`,
         });
     },
 };
