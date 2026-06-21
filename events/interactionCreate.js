@@ -63,7 +63,7 @@ module.exports = {
 
             const embed = new EmbedBuilder()
                 .setTitle('تیکت شما ساخته شد!')
-                .setDescription(`سلام ${interaction.user}، لطفا منتظر بمانید تا تیم مدیریتی پاسخ دهد.\n<@&${adminRoleId}>`)
+                .setDescription(`سلام لطفا منتظر بمانید تا تیم مدیریتی پاسخ دهد.\nبرای بستن این تیکت، روی دکمه زیر کلیک کنید.`)
                 .setColor('#971616');
 
             const row = new ActionRowBuilder()
@@ -74,7 +74,7 @@ module.exports = {
                         .setStyle(ButtonStyle.Danger),
                 );
 
-            await ticketChannel.send({ embeds: [embed], components: [row] });
+            await ticketChannel.send({ content: `<@&${adminRoleId}>\n${interaction.user}`, embeds: [embed], components: [row] });
             await interaction.editReply({ content: `✅ تیکت شما ساخته شد: ${ticketChannel}` });
         }
 
